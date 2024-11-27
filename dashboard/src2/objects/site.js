@@ -31,9 +31,6 @@ export default {
 		backup: 'backup',
 		clearSiteCache: 'clear_site_cache',
 		deactivate: 'deactivate',
-		enableDatabaseAccess: 'enable_database_access',
-		disableDatabaseAccess: 'disable_database_access',
-		getDatabaseCredentials: 'get_database_credentials',
 		disableReadWrite: 'disable_read_write',
 		enableReadWrite: 'enable_read_write',
 		installApp: 'install_app',
@@ -133,7 +130,7 @@ export default {
 					return value || row.name;
 				}
 			},
-			{ label: 'Status', fieldname: 'status', type: 'Badge', width: 0.7 },
+			{ label: 'Status', fieldname: 'status', type: 'Badge', width: '140px' },
 			{
 				label: 'Plan',
 				fieldname: 'plan',
