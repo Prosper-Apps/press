@@ -24,6 +24,7 @@ from press.api.client import is_owned_by_team
 from press.press.doctype.agent_job_type.agent_job_type import (
 	get_retryable_job_types_and_max_retry_count,
 )
+from press.press.doctype.site_database_user.site_database_user import SiteDatabaseUser
 from press.press.doctype.site_migration.site_migration import (
 	get_ongoing_migration,
 	job_matches_site_migration,
@@ -895,7 +896,6 @@ def process_job_updates(job_name: str, response_data: dict | None = None):  # no
 			process_setup_erpnext_site_job_update,
 		)
 		from press.press.doctype.site.site import (
-			process_add_proxysql_user_job_update,
 			process_archive_site_job_update,
 			process_complete_setup_wizard_job_update,
 			process_create_user_job_update,
@@ -904,7 +904,6 @@ def process_job_updates(job_name: str, response_data: dict | None = None):  # no
 			process_move_site_to_bench_job_update,
 			process_new_site_job_update,
 			process_reinstall_site_job_update,
-			process_remove_proxysql_user_job_update,
 			process_rename_site_job_update,
 			process_restore_job_update,
 			process_restore_tables_job_update,
@@ -978,10 +977,9 @@ def process_job_updates(job_name: str, response_data: dict | None = None):  # no
 			process_add_ssh_user_job_update(job)
 		elif job.job_type == "Remove User from Proxy":
 			process_remove_ssh_user_job_update(job)
-		elif job.job_type == "Add User to ProxySQL":
-			process_add_proxysql_user_job_update(job)
-		elif job.job_type == "Remove User from ProxySQL":
-			process_remove_proxysql_user_job_update(job)
+		elif job.job_type == "Add User to ProxySQL" or job.job_type == "Remove User from ProxySQL":
+			if job.reference_doctype == "Site Database User":
+				SiteDatabaseUser.process_job_update(job)
 		elif job.job_type == "Reload NGINX":
 			process_update_nginx_job_update(job)
 		elif job.job_type == "Move Site to Bench":
@@ -1015,6 +1013,12 @@ def process_job_updates(job_name: str, response_data: dict | None = None):  # no
 			Bench.process_recover_update_inplace(job)
 		elif job.job_type == "Fetch Database Table Schema":
 			SiteDatabaseTableSchema.process_job_update(job)
+		elif job.job_type in [
+			"Create Database User",
+			"Remove Database User",
+			"Modify Database User Permissions",
+		]:
+			SiteDatabaseUser.process_job_update(job)
 
 		# send failure notification if job failed
 		if job.status == "Failure":
