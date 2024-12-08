@@ -415,7 +415,10 @@ class ReleaseGroup(Document, TagHelpers):
 			},
 			limit=1,
 		):
-			frappe.throw(f"Release Group {self.title} already exists.", frappe.ValidationError)
+			frappe.throw(
+				f"Bench Group of name {self.title} already exists. Please try another name.",
+				frappe.ValidationError,
+			)
 
 	def validate_frappe_app(self):
 		if self.apps[0].app != "frappe":
@@ -785,7 +788,7 @@ class ReleaseGroup(Document, TagHelpers):
 		old_team = frappe.db.get_value("Team", self.team, "user")
 
 		if old_team == team_mail_id:
-			frappe.throw(f"Bench is already owned by the team {team_mail_id}")
+			frappe.throw(f"Bench group is already owned by the team {team_mail_id}")
 
 		team_change = frappe.get_doc(
 			{
