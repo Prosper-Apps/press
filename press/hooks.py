@@ -124,6 +124,7 @@ permission_query_conditions = {
 	"Press Webhook": "press.press.doctype.press_webhook.press_webhook.get_permission_query_conditions",
 	"Press Webhook Log": "press.press.doctype.press_webhook_log.press_webhook_log.get_permission_query_conditions",
 	"SQL Playground Log": "press.press.doctype.sql_playground_log.sql_playground_log.get_permission_query_conditions",
+	"Site Database User": "press.press.doctype.site_database_user.site_database_user.get_permission_query_conditions",
 }
 has_permission = {
 	"Site": "press.overrides.has_permission",
@@ -147,6 +148,7 @@ has_permission = {
 	"Press Webhook Log": "press.overrides.has_permission",
 	"Press Webhook Attempt": "press.press.doctype.press_webhook_attempt.press_webhook_attempt.has_permission",
 	"SQL Playground Log": "press.overrides.has_permission",
+	"Site Database User": "press.overrides.has_permission",
 }
 
 # Document Events
@@ -180,7 +182,6 @@ scheduler_events = {
 	"daily_long": [
 		"press.press.audit.check_bench_fields",
 		"press.press.audit.check_offsite_backups",
-		"press.press.audit.check_backup_records",
 		"press.press.audit.check_app_server_replica_benches",
 		"press.press.doctype.invoice.invoice.finalize_unpaid_prepaid_credit_invoices",
 		"press.press.doctype.bench.bench.sync_analytics",
@@ -232,6 +233,9 @@ scheduler_events = {
 		"0 4 * * *": [
 			"press.press.doctype.site.backups.cleanup_offsite",
 			"press.press.cleanup.unlink_remote_files_from_site",
+		],
+		"10 0 * * *": [
+			"press.press.audit.check_backup_records",
 		],
 		"0 3 * * *": [
 			"press.press.doctype.drip_email.drip_email.send_drip_emails",
@@ -287,7 +291,7 @@ scheduler_events = {
 		"0 8 * * *": [
 			"press.press.doctype.aws_savings_plan_recommendation.aws_savings_plan_recommendation.create",
 		],
-		"0 9 * * *": [
+		"0 18 * * *": [
 			"press.press.audit.billing_audit",
 			"press.press.audit.partner_billing_audit",
 		],
