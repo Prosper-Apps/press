@@ -89,7 +89,7 @@ export default {
 			product_trial_request: this.$route.query.product_trial_request,
 			progressCount: 0,
 			isRedirectingToSite: false,
-			currentBuildStep: 'Waiting for build to be started'
+			currentBuildStep: 'Preparing for build'
 		};
 	},
 	resources: {
@@ -152,7 +152,10 @@ export default {
 						method: 'get_login_sid',
 						onSuccess(data) {
 							let sid = data;
-							let loginURL = `https://${this.$resources.siteRequest.doc.site}/desk?sid=${sid}`;
+							let redirectRoute =
+								this.$resources?.saasProduct?.doc?.redirect_to_after_login ??
+								'/desk';
+							let loginURL = `https://${this.$resources.siteRequest.doc.site}${redirectRoute}?sid=${sid}`;
 							this.isRedirectingToSite = true;
 							window.open(loginURL, '_self');
 						}
